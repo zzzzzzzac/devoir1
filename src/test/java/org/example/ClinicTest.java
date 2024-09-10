@@ -15,7 +15,6 @@ public class ClinicTest {
 
         clinic.triagePatient("John", 4, VisibleSymptom.MIGRAINE);
 
-
         assertEquals(1, clinic.getMedecin().size());
         assertEquals(0, clinic.getRadiologie().size());
     }
