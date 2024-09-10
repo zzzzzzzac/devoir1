@@ -1,5 +1,4 @@
 package org.example;
-import java.util.Queue;
 import java.util.LinkedList;
 
 
@@ -19,14 +18,51 @@ public class Clinic {
     public void triagePatient(String name, int gravity, VisibleSymptom visibleSymptom){
         Patient patient = new Patient(name, gravity, visibleSymptom);
 
+        if (medecinTriageType == TriageType.GRAVITY)
+            addGravity(patient);
+
+        else if (medecinTriageType == TriageType.FIFO) {
+            addFifo(patient);
+        }
         // ajouter patient au médecin
         medecin.add(patient);
 
+    }
+
+    private void addFifo(Patient patient){
+        medecin.addLast(patient);
+
         // ajouter patient à la radiologie
+        if (patient.visibleSymptom() == VisibleSymptom.BROKEN_BONE || patient.visibleSymptom() == VisibleSymptom.SPRAIN){
+        radiologie.add(patient);
+        }
+    }
+    
+    private void addGravity(Patient patient){
+
+        if (patient.gravity() > 5) {
+            boolean inserted = false;
+            int i = 0;
+            while (i < medecin.size() && !inserted) {
+                if (medecin.get(i).gravity() <= patient.gravity()) {
+                    medecin.add(i, patient);
+                    inserted = true;
+                }
+                i++;
+            }
+            if (!inserted) {
+                medecin.addLast(patient);
+            }
+        // si gravity =< 5
+        } else {
+            medecin.addLast(patient);
+        }
+
         if (patient.visibleSymptom() == VisibleSymptom.BROKEN_BONE || patient.visibleSymptom() == VisibleSymptom.SPRAIN){
             radiologie.add(patient);
         }
     }
+
 
     public LinkedList<Patient> getMedecin() {
         return medecin;
