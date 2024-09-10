@@ -9,6 +9,7 @@ public class Clinic {
     private TriageType medecinTriageType;
     private TriageType radiologieTriageType;
     public Clinic(TriageType medecinTriageType, TriageType radiologieTriageType) {
+
         this.medecin = new LinkedList<>();
         this.radiologie = new LinkedList<>();
         this.medecinTriageType = medecinTriageType;
@@ -17,7 +18,7 @@ public class Clinic {
     }
     public void triagePatient(String name, int gravity, VisibleSymptom visibleSymptom){
         Patient patient = new Patient(name, gravity, visibleSymptom);
-
+        // triage medecin
         if (medecinTriageType == TriageType.GRAVITY)
             addGravity(patient);
 
@@ -29,12 +30,8 @@ public class Clinic {
 
     }
 
-    private void addFifo(Patient patient){
-        medecin.addLast(patient);
-
-        // ajouter patient à la radiologie
-        if (patient.visibleSymptom() == VisibleSymptom.BROKEN_BONE || patient.visibleSymptom() == VisibleSymptom.SPRAIN){
-        radiologie.add(patient);
+    private void addFifoMedecin(Patient patient){
+        this.medecin.addLast(patient);
         }
     }
     
@@ -43,33 +40,29 @@ public class Clinic {
         if (patient.gravity() > 5) {
             boolean inserted = false;
             int i = 0;
-            while (i < medecin.size() && !inserted) {
-                if (medecin.get(i).gravity() <= patient.gravity()) {
-                    medecin.add(i, patient);
+            while (i < this.medecin.size() && !inserted) {
+                if (this.medecin.get(i).gravity() <= patient.gravity()) {
+                    this.medecin.add(i, patient);
                     inserted = true;
                 }
                 i++;
             }
             if (!inserted) {
-                medecin.addLast(patient);
+                this.medecin.addLast(patient);
             }
         // si gravity =< 5
         } else {
-            medecin.addLast(patient);
-        }
-
-        if (patient.visibleSymptom() == VisibleSymptom.BROKEN_BONE || patient.visibleSymptom() == VisibleSymptom.SPRAIN){
-            radiologie.add(patient);
+            this.medecin.addLast(patient);
         }
     }
 
 
     public LinkedList<Patient> getMedecin() {
-        return medecin;
+        return this.medecin;
     }
 
     public LinkedList<Patient> getRadiologie() {
-        return radiologie;
+        return this.radiologie;
     }
 }
 
